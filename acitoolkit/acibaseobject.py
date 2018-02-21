@@ -414,8 +414,15 @@ class BaseACIObject(AciSearch):
             for key in item:
                 if key in cls._get_apic_classes():
                     attribute_data = item[key]['attributes']
-                    obj = cls(str(attribute_data['name']), parent)
-                    obj._populate_from_attributes(attribute_data)
+                    if key == 'vnsFolderInst':
+                        obj = cls(str(attribute_data['name']))
+                        obj._populate_from_attributes(attribute_data)
+                        if parent.has_child(obj):
+                            parent.remove_child(obj)
+                        parent.add_child(obj)
+                    else:
+                        obj = cls(str(attribute_data['name']), parent)
+                        obj._populate_from_attributes(attribute_data)
                     if 'children' in item[key]:
                         for child in item[key]['children']:
                             for apic_class in child:

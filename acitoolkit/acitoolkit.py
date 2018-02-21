@@ -829,6 +829,310 @@ class AttributeCriterion(BaseACIObject):
                                                         children=children)
 
 
+class Folder(BaseACIObject):
+    """
+    Folder class
+    """
+    def __init__(self, name, parent=None):
+        self.dn = None
+        self.lcOwn = None
+        self.ctrctNameOrLbl = None
+        self.devCtxLbl = None
+        self.graphNameOrLbl = None
+        self.key = None
+        self.locked = None
+        self.nameAlias = None
+        self.nodeNameOrLbl = None
+        self.scopedBy = None
+
+        super(Folder, self).__init__(name, parent)
+
+    @classmethod
+    def _get_apic_classes(cls):
+        """
+        Get the APIC classes used by this acitoolkit class.
+
+        :returns: list of strings containing APIC class names
+        """
+        return ['vnsFolderInst']
+
+    @classmethod
+    def _get_toolkit_to_apic_classmap(cls):
+        """
+        Gets the APIC class to an acitoolkit class mapping dictionary
+
+        :returns: dict of APIC class names to acitoolkit classes
+        """
+        return {'vnsFolderInst': Folder,
+                'vnsParamInst': Parameter,
+                'vnsCfgRelInst': Relation}
+
+    @staticmethod
+    def _get_parent_class():
+        """
+        Gets the class of the parent object
+
+        :returns: class of parent object
+        """
+        return EPG, Folder
+
+    def get_json(self):
+        """
+        Returns json representation of the fvTenant object
+
+        :returns: A json dictionary of fvTenant
+        """
+        attr = self._generate_attributes()
+        return super(Folder, self).get_json(self._get_apic_classes()[0],
+                                            attributes=attr)
+
+    def _generate_attributes(self):
+        """
+        Gets the attributes used in generating the JSON for the object
+        """
+
+        attributes = dict()
+        #if self.dn:
+        #    attributes['dn'] = self.dn
+        if self.ctrctNameOrLbl:
+            attributes['ctrctNameOrLbl'] = self.ctrctNameOrLbl
+        if self.devCtxLbl:
+            attributes['devCtxLbl'] = self.devCtxLbl
+        if self.graphNameOrLbl:
+            attributes['graphNameOrLbl'] = self.graphNameOrLbl
+        if self.key:
+            attributes['key'] = self.key
+        if self.locked:
+            attributes['locked'] = self.locked
+        if self.name:
+            attributes['name'] = self.name
+        if self.nameAlias:
+            attributes['nameAlias'] = self.nameAlias
+        if self.nodeNameOrLbl:
+            attributes['nodeNameOrLbl'] = self.nodeNameOrLbl
+        if self.scopedBy:
+            attributes['scopedBy'] = self.scopedBy
+
+        return attributes
+
+    def _populate_from_attributes(self, attributes):
+        """Fills in an object with the desired attributes.
+           Overridden by inheriting classes to provide the specific attributes
+           when getting objects from the APIC.
+        """
+        # always get a dn
+        #self.dn = self.get_dn_from_attributes(attributes)
+        self.descr = attributes.get('descr')
+        self.lcOwn = attributes.get('lcOwn')
+        self.ctrctNameOrLbl = attributes.get('ctrctNameOrLbl')
+        self.devCtxLbl = attributes.get('devCtxLbl')
+        self.graphNameOrLbl = attributes.get('graphNameOrLbl')
+        self.key = attributes.get('key')
+        self.locked = attributes.get('locked')
+        self.name = attributes.get('name')
+        self.nameAlias = attributes.get('nameAlias')
+        self.nodeNameOrLbl = attributes.get('nodeNameOrLbl')
+        self.scopedBy = attributes.get('scopedBy')
+
+    def get_parent(self):
+        """
+        :returns: Parent of this object.
+        """
+        return self._parent
+
+    @classmethod
+    def get(cls, session, parent=None, tenant=None):
+        """Gets all of the Folders from the APIC.
+
+        :param session: the instance of Session used for APIC communication
+        :param parent: Instance of the parent class used to limit the Folders\
+                       retreived from the APIC.
+        :param tenant: Instance of Tenant class used to limit the Folders\
+                       retreived from the APIC.
+        :returns: List of Folder instances
+        """
+        return BaseACIObject.get(session, cls, cls._get_apic_classes()[0],
+                                 parent, tenant)
+
+
+class Parameter(BaseACIObject):
+    def __init__(self, name, parent=None):
+        self.dn = None
+        self.lcOwn = None
+        self.key = None
+        self.locked = None
+        self.mandatory = None
+        self.nameAlias = None
+        self.value = None
+
+        super(Parameter, self).__init__(name, parent)
+        
+    @classmethod
+    def _get_apic_classes(cls):
+        """
+        Get the APIC classes used by this acitoolkit class.
+
+        :returns: list of strings containing APIC class names
+        """
+        return ['vnsParamInst']
+
+    @classmethod
+    def _get_toolkit_to_apic_classmap(cls):
+        """
+        Gets the APIC class to an acitoolkit class mapping dictionary
+
+        :returns: dict of APIC class names to acitoolkit classes
+        """
+        return {}
+
+    @staticmethod
+    def _get_parent_class():
+        """
+        Gets the class of the parent object
+
+        :returns: class of parent object
+        """
+        return Folder
+
+    def _generate_attributes(self):
+        """
+        Gets the attributes used in generating the JSON for the object
+        """
+
+        attributes = dict()
+        #if self.dn:
+        #    attributes['dn'] = self.dn
+        if self.key:
+            attributes['key'] = self.key
+        if self.locked:
+            attributes['locked'] = self.locked
+        if self.mandatory:
+            attributes['mandatory'] = self.mandatory
+        if self.name:
+            attributes['name'] = self.name
+        if self.nameAlias:
+            attributes['nameAlias'] = self.nameAlias
+        if self.value:
+            attributes['value'] = self.value
+
+        return attributes
+
+    def _populate_from_attributes(self, attributes):
+        """Fills in an object with the desired attributes.
+           Overridden by inheriting classes to provide the specific attributes
+           when getting objects from the APIC.
+        """
+        # always get a dn
+        #self.dn = self.get_dn_from_attributes(attributes)
+        self.lcOwn = attributes.get('lcOwn')
+        self.key = attributes.get('key')
+        self.locked = attributes.get('locked')
+        self.mandatory = attributes.get('mandatory')
+        self.name = attributes.get('name')
+        self.nameAlias = attributes.get('nameAlias')
+        self.value = attributes.get('value')
+
+    def get_json(self):
+        """
+        Returns json representation of the fvTenant object
+
+        :returns: A json dictionary of fvTenant
+        """
+        attr = self._generate_attributes()
+        return super(Parameter, self).get_json(self._get_apic_classes()[0],
+                                            attributes=attr)
+
+
+class Relation(BaseACIObject):
+    def __init__(self, name, parent=None):
+        self.dn = None
+        self.lcOwn = None
+        self.key = None
+        self.locked = None
+        self.mandatory = None
+        self.nameAlias = None
+        self.targetName = None
+
+        super(Relation, self).__init__(name, parent)
+
+    @classmethod
+    def _get_apic_classes(cls):
+        """
+        Get the APIC classes used by this acitoolkit class.
+
+        :returns: list of strings containing APIC class names
+        """
+        return ['vnsCfgRelInst']
+
+
+    @classmethod
+    def _get_toolkit_to_apic_classmap(cls):
+        """
+        Gets the APIC class to an acitoolkit class mapping dictionary
+
+        :returns: dict of APIC class names to acitoolkit classes
+        """
+        return {}
+
+
+    @staticmethod
+    def _get_parent_class():
+        """
+        Gets the class of the parent object
+
+        :returns: class of parent object
+        """
+        return Folder
+
+    def _generate_attributes(self):
+        """
+        Gets the attributes used in generating the JSON for the object
+        """
+
+        attributes = dict()
+        #if self.dn:
+        #    attributes['dn'] = self.dn
+        if self.key:
+            attributes['key'] = self.key
+        if self.locked:
+            attributes['locked'] = self.locked
+        if self.mandatory:
+            attributes['mandatory'] = self.mandatory
+        if self.name:
+            attributes['name'] = self.name
+        if self.nameAlias:
+            attributes['nameAlias'] = self.nameAlias
+        if self.targetName:
+            attributes['targetName'] = self.targetName
+
+        return attributes
+
+    def _populate_from_attributes(self, attributes):
+        """Fills in an object with the desired attributes.
+           Overridden by inheriting classes to provide the specific attributes
+           when getting objects from the APIC.
+        """
+        # always get a dn
+        #self.dn = self.get_dn_from_attributes(attributes)
+        self.lcOwn = attributes.get('lcOwn')
+        self.key = attributes.get('key')
+        self.locked = attributes.get('locked')
+        self.mandatory = attributes.get('mandatory')
+        self.name = attributes.get('name')
+        self.nameAlias = attributes.get('nameAlias')
+        self.targetName = attributes.get('targetName')
+
+    def get_json(self):
+        """
+        Returns json representation of the fvTenant object
+
+        :returns: A json dictionary of fvTenant
+        """
+        attr = self._generate_attributes()
+        return super(Relation, self).get_json(self._get_apic_classes()[0],
+                                            attributes=attr)
+
+
 class EPG(CommonEPG):
     """ EPG :  roughly equivalent to fvAEPg """
 
@@ -916,7 +1220,8 @@ class EPG(CommonEPG):
         """
         return {'fvCEp': Endpoint,
                 'fvStCEp': Endpoint,
-                'fvCrtrn': AttributeCriterion}
+                'fvCrtrn': AttributeCriterion,
+                'vnsFolderInst': Folder}
 
     @staticmethod
     def _get_parent_class():
